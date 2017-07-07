@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "entry": "./lib/webparts/presupuesto/PresupuestoWebPart.js",
+      "manifest": "./src/webparts/presupuesto/PresupuestoWebPart.manifest.json",
+      "outputPath": "./dist/presupuesto.bundle.js"
+    }
+  ],
+  "externals": {},
+  "localizedResources": {
+    "presupuestoStrings": "webparts/presupuesto/loc/{locale}.js"
+  }
+}
