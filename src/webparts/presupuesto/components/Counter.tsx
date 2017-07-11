@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { IconButton } from 'office-ui-fabric-react/lib/Button';
 import { Label } from 'office-ui-fabric-react/lib/Label';
-import { NumberTextField } from "./NumberTextField/NumberTextField";
 
 export default class Counter extends React.Component<any, any> {
   public render() {

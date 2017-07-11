@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { Label } from "office-ui-fabric-react/lib/components/Label";
 import { Dropdown } from "office-ui-fabric-react/lib/components/Dropdown";
-import { DefaultButton, IButtonProps } from 'office-ui-fabric-react/lib/Button';
-import * as _ from "lodash";
+import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
 
 export default class Header extends React.Component<any, any> {
     constructor() {
@@ -13,7 +12,7 @@ export default class Header extends React.Component<any, any> {
   }      
   public render() {
     return (
-        <div className="ms-Grid" style={{textAlign: 'left', verticalAlign: 'bottom'}}>
+        <div className="ms-Grid" >
             <div className="ms-Grid-col ms-u-sm6 ms-u-md8 ms-u-lg9" >
                 <Dropdown 
                     label='' 

@@ -1,12 +1,13 @@
 import * as React from 'react';
-//import styles from './Presupuesto.module.scss';
 import { IPresupuestoProps } from './IPresupuestoProps';
 import pnp from 'sp-pnp-js';
 import Card from "./Card";
 import Header from "./Header";
 import { DefaultButton, IButtonProps } from 'office-ui-fabric-react/lib/Button';
 import * as _ from "lodash";
-import Counter from "./Counter";
+import logo from './Logo';
+import * as jsPDF from "jspdf";
+
 
 export default class Presupuesto extends React.Component<IPresupuestoProps, any> {
     constructor() {
@@ -17,6 +18,8 @@ export default class Presupuesto extends React.Component<IPresupuestoProps, any>
     }; 
   }   
   public render(): React.ReactElement<IPresupuestoProps> {
+    
+    
     return (
       <div>
         <Header Products={this.state.products} OnAddProduct={this.addProduct}  />
@@ -30,11 +33,15 @@ export default class Presupuesto extends React.Component<IPresupuestoProps, any>
           ) 
         }
         <h2>
-          Total: ${_.sumBy((_.filter(this.state.products, { 'selected': true }) as Array<any>), (o) => { return o.quantity * o.Precio; })}
+          Total: ${this.total()}
         </h2>
       </div>
     );
   }
+
+  private total = () => 
+      _.sumBy((_.filter(this.state.products, { 'selected': true }) as Array<any>), (o) => { return o.quantity * o.Precio; });
+  
 
   private incrementProduct = (item) => {
     this.setState((prevState, props) => {
@@ -81,7 +88,24 @@ export default class Presupuesto extends React.Component<IPresupuestoProps, any>
     });
   }
 
-  private componentDidMount = () => 
+  private componentDidMount = () => {
     pnp.sp.web.lists.getByTitle('Productos').items.top(10).orderBy('Title').get().then(items => this.loadProducts(items));
+    /*pnp.sp.web.getFileByServerRelativeUrl('/SiteAssets/Logo.png').getText().then(
+      (text: string) => {
+        console.log(tex
+    );
+*/
+
+var doc = new jsPDF()
+doc.text(20, 20, 'Hello world cabe!')
+doc.text(20, 30, 'This is client-side Javascript, pumping out a PDF.')
+doc.addPage()
+doc.text(20, 20, 'Do you like that?')
+doc.save('a.pdf')
+
+  }
+
+
+  
 
 }
