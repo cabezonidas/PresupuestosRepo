@@ -13,10 +13,6 @@ export default class Counter extends React.Component<any, any> {
                 />
             </div>
             <div className="ms-Grid-col" >
-                { /* <NumberTextField
-                    label={this.props.label}
-                    initialValue={this.props.initialValue}
-                /> */ }
                 <Label>{this.props.initialValue}</Label>
             </div>
             <div className="ms-Grid-col" >

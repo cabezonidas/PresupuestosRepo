@@ -2,11 +2,13 @@ import * as React from 'react';
 import { IPresupuestoProps } from './IPresupuestoProps';
 import pnp from 'sp-pnp-js';
 import Card from "./Card";
-import Header from "./Header";
+import ProductSelector from "./ProductSelector";
 import { DefaultButton, IButtonProps } from 'office-ui-fabric-react/lib/Button';
 import * as _ from "lodash";
-import logo from './Logo';
-import * as jsPDF from "jspdf";
+import { SPComponentLoader } from '@microsoft/sp-loader';
+import ConvertToPdf from './ConvertToPdf';
+import HeaderInfo from "./HeaderInfo";
+import CustomerInfo from "./CustomerInfo";
 
 
 export default class Presupuesto extends React.Component<IPresupuestoProps, any> {
@@ -14,15 +16,19 @@ export default class Presupuesto extends React.Component<IPresupuestoProps, any>
     super();
     this.addProduct = this.addProduct.bind(this);
     this.state = {
-      products: []
+      products: [],
+      headerInfo: new HeaderInfo()
     }; 
+    pnp.sp.web.get().then(web => SPComponentLoader.loadCss(web.Url + '/CDN/PresupuestosWebpartStyles.css'));
   }   
   public render(): React.ReactElement<IPresupuestoProps> {
     
     
     return (
       <div>
-        <Header Products={this.state.products} OnAddProduct={this.addProduct}  />
+        {//<CustomerInfo onCustomerChange={this.updateCustomer} onCustomerNumberChange={this.updateCustomerNumber} onCustomerEmailChange={this.updateCustomerEmail} onDeliveryDateChange={this.updateDeliveryDate} customerInfo={this.state.headerInfo} />*/
+        }
+        <ProductSelector Products={this.state.products} OnAddProduct={this.addProduct}  />
         { 
           (_.filter(this.state.products, { 'selected': true }) as Array<any>).map(product => 
             <Card {...product} 
@@ -35,8 +41,38 @@ export default class Presupuesto extends React.Component<IPresupuestoProps, any>
         <h2>
           Total: ${this.total()}
         </h2>
+        <DefaultButton label='Imprimir' onClick={this.makePdf} />
       </div>
     );
+  }
+
+  private updateCustomer = (value) => 
+    this.setState((prevState, props) => {
+      prevState.headerInfo.Customer = value;
+      return {headerInfo: prevState.headerInfo};
+    })
+
+  private updateCustomerNumber = (value) => 
+    this.setState((prevState, props) => {
+      prevState.headerInfo.CustomerNumber = value;
+      return {headerInfo: prevState.headerInfo};
+    })
+
+  private updateCustomerEmail = (value) => 
+    this.setState((prevState, props) => {
+      prevState.headerInfo.CustomerMail = value;
+      return {headerInfo: prevState.headerInfo};
+    })
+
+  private updateDeliveryDate = (value) => 
+    this.setState((prevState, props) => {
+      prevState.headerInfo.DaliveryDate = value;
+      return {headerInfo: prevState.headerInfo};
+    })
+
+  private makePdf = () => {
+    let pdf = ConvertToPdf(this.state);
+    pdf.output('datauri');
   }
 
   private total = () => 
@@ -88,24 +124,7 @@ export default class Presupuesto extends React.Component<IPresupuestoProps, any>
     });
   }
 
-  private componentDidMount = () => {
-    pnp.sp.web.lists.getByTitle('Productos').items.top(10).orderBy('Title').get().then(items => this.loadProducts(items));
-    /*pnp.sp.web.getFileByServerRelativeUrl('/SiteAssets/Logo.png').getText().then(
-      (text: string) => {
-        console.log(tex
-    );
-*/
-
-var doc = new jsPDF()
-doc.text(20, 20, 'Hello world cabe!')
-doc.text(20, 30, 'This is client-side Javascript, pumping out a PDF.')
-doc.addPage()
-doc.text(20, 20, 'Do you like that?')
-doc.save('a.pdf')
-
-  }
-
-
-  
+  private componentDidMount = () => 
+    pnp.sp.web.lists.getByTitle('Productos').items.top(500).orderBy('Title').get().then(items => this.loadProducts(items));
 
 }

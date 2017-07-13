@@ -3,7 +3,7 @@ import { Label } from "office-ui-fabric-react/lib/components/Label";
 import { Dropdown } from "office-ui-fabric-react/lib/components/Dropdown";
 import { DefaultButton } from 'office-ui-fabric-react/lib/Button';
 
-export default class Header extends React.Component<any, any> {
+export default class ProductSelector extends React.Component<any, any> {
     constructor() {
         super();
         this.state = {
