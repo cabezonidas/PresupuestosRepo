@@ -10,14 +10,17 @@ import ConvertToPdf from './ConvertToPdf';
 import HeaderInfo from "./HeaderInfo";
 import CustomerInfo from "./CustomerInfo";
 
-
 export default class Presupuesto extends React.Component<IPresupuestoProps, any> {
     constructor() {
     super();
     this.addProduct = this.addProduct.bind(this);
     this.state = {
       products: [],
-      headerInfo: new HeaderInfo()
+      headerInfo: new HeaderInfo(),
+      showDialog: false,
+      saving: false,
+      documentSaved: false,
+      documentUrl: ''
     }; 
     pnp.sp.web.get().then(web => SPComponentLoader.loadCss(web.Url + '/CDN/PresupuestosWebpartStyles.css'));
   }   
@@ -25,9 +28,8 @@ export default class Presupuesto extends React.Component<IPresupuestoProps, any>
     
     
     return (
-      <div>
-        {//<CustomerInfo onCustomerChange={this.updateCustomer} onCustomerNumberChange={this.updateCustomerNumber} onCustomerEmailChange={this.updateCustomerEmail} onDeliveryDateChange={this.updateDeliveryDate} customerInfo={this.state.headerInfo} />*/
-        }
+      <div>   
+        <h2>Presupuesto</h2>     
         <ProductSelector Products={this.state.products} OnAddProduct={this.addProduct}  />
         { 
           (_.filter(this.state.products, { 'selected': true }) as Array<any>).map(product => 
@@ -41,9 +43,26 @@ export default class Presupuesto extends React.Component<IPresupuestoProps, any>
         <h2>
           Total: ${this.total()}
         </h2>
-        <DefaultButton label='Imprimir' onClick={this.makePdf} />
+        <DefaultButton label='Guardar' onClick={this.askCustomerInformation} />
+        <CustomerInfo onCustomerChange={this.updateCustomer} 
+          onCustomerNumberChange={this.updateCustomerNumber} 
+          onCustomerEmailChange={this.updateCustomerEmail} 
+          onDeliveryDateChange={this.updateDeliveryDate} 
+          customerInfo={this.state.headerInfo}
+          showDialog={this.state.showDialog}
+          hideDialog={this.onHideCatalog}
+          onSave={this.makePdf}
+          onClose={ this.onHideCatalog }
+          saving={this.state.saving}
+          saved={this.state.documentSaved}
+          onPrint={() => { window.open(this.state.documentUrl); this.onHideCatalog();}}
+        />
       </div>
     );
+  }
+
+  private onHideCatalog = () => {
+      this.setState({showDialog: false, documentSaved: false });
   }
 
   private updateCustomer = (value) => 
@@ -70,9 +89,32 @@ export default class Presupuesto extends React.Component<IPresupuestoProps, any>
       return {headerInfo: prevState.headerInfo};
     })
 
+  private askCustomerInformation = () => {
+    this.setState({showDialog: true });
+  }
+
+
+  private addUniqueFileToPresupuestos = (name: string, file: Blob, repeats: number) => {
+    let filename = name + (repeats == 0 ? '' : ` (${repeats})`); 
+    this.setState({ saving: true });
+    pnp.sp.web.lists.getByTitle('Presupuestos').rootFolder.files.add(filename + '.pdf', file, false)
+      .then(item => this.onSaved(item)) 
+      .catch(err => this.addUniqueFileToPresupuestos(name, file, repeats + 1));
+  }
+
+  private onSaved = (file) => {
+    this.setState({ 
+      saving: false,
+      documentUrl: file.data.ServerRelativeUrl,
+      documentSaved: true
+    });
+  }
+
   private makePdf = () => {
     let pdf = ConvertToPdf(this.state);
-    pdf.output('datauri');
+    let file = pdf.output('blob');
+    let filename = this.state.headerInfo.Customer || 'Sin nombre';
+    this.addUniqueFileToPresupuestos(filename, file, 0);
   }
 
   private total = () => 
@@ -125,6 +167,6 @@ export default class Presupuesto extends React.Component<IPresupuestoProps, any>
   }
 
   private componentDidMount = () => 
-    pnp.sp.web.lists.getByTitle('Productos').items.top(500).orderBy('Title').get().then(items => this.loadProducts(items));
+    pnp.sp.web.lists.getByTitle('Productos').items.top(500).orderBy('Categoria').orderBy('Title').get().then(items => this.loadProducts(items));
 
 }
