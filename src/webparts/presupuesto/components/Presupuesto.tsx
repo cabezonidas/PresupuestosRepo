@@ -34,6 +34,7 @@ export default class Presupuesto extends React.Component<IPresupuestoProps, any>
               OnDeletedProduct={this.removeProduct} 
               OnIncrementProduct={this.incrementProduct}
               OnDecrementProduct={this.decrementProduct}
+              OnAlterProductQuantity={this.updateProductNumber}
             />
           ) 
         }
@@ -115,6 +116,16 @@ export default class Presupuesto extends React.Component<IPresupuestoProps, any>
 
   private total = () => 
       _.sumBy((_.filter(this.state.products, { 'selected': true }) as Array<any>), (o) => { return o.quantity * o.Precio; });
+
+
+  private updateProductNumber = (value, index) => {
+    this.setState((prevState, props) => {
+      let products = prevState.products.slice();
+      let quantity = (!isNaN(value) ? value : products[index].quantity) || 0;
+      products[index].quantity = parseInt(quantity, 10);
+      return {products: products};
+    });
+  } 
 
   private incrementProduct = (item) => {
     this.setState((prevState, props) => {

@@ -2,7 +2,7 @@
   "solution": {
     "name": "Presupuestos App",
     "id": "5ab7716b-398c-446f-ba0f-cf59a47ae924",
-    "version": "1.0.0.1"
+    "version": "1.0.0.2"
   },
   "paths": {
     "zippedPackage": "solution/presupuestos.sppkg"
