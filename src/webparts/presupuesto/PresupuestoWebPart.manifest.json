@@ -4,15 +4,15 @@
   "id": "447b5fe6-fbd9-412c-b1d9-3408aadba5bb",
   "alias": "PresupuestoWebPart",
   "componentType": "WebPart",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "manifestVersion": 2,
 
   "preconfiguredEntries": [{
     "groupId": "447b5fe6-fbd9-412c-b1d9-3408aadba5bb",
-    "group": { "default": "Under Development" },
+    "group": { "default": "De las Artes" },
     "title": { "default": "Presupuesto" },
     "description": { "default": "WebPart para armar presupuestos." },
-    "officeFabricIconFontName": "Page",
+    "officeFabricIconFontName": "Cake",
     "properties": {
       "description": "Presupuesto"
     }

@@ -23,6 +23,7 @@ export default class ProductSelector extends React.Component<any, any> {
             <div className="ms-Grid-col ms-u-sm6 ms-u-md4 ms-u-lg3" >
                 <DefaultButton title='Agregar item al presupuesto' label='Agregar'
                     onClick={() => this.props.OnAddProduct(this.state.selectedProduct)}
+                    type='button'
                 />
             </div>
         </div>

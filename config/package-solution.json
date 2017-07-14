@@ -1,8 +1,8 @@
 {
   "solution": {
-    "name": "presupuestos-client-side-solution",
+    "name": "Presupuestos App",
     "id": "5ab7716b-398c-446f-ba0f-cf59a47ae924",
-    "version": "1.0.0.0"
+    "version": "1.0.0.1"
   },
   "paths": {
     "zippedPackage": "solution/presupuestos.sppkg"

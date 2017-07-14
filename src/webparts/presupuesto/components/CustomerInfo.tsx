@@ -33,7 +33,7 @@ export default class CustomerInfo extends React.Component<any, any> {
                     <DatePicker label='Fecha de Entrega' 
                         value={this.props.customerInfo.DaliveryDate} 
                         onSelectDate={this.props.onDeliveryDateChange}/>
-                    <DefaultButton
+                    <DefaultButton type="button"
                         label='Guardar'
                             onClick={this.props.onSave}/>
                     </div> : (null) }                
@@ -43,12 +43,12 @@ export default class CustomerInfo extends React.Component<any, any> {
                     <table>
                         <tr>
                             <td>
-                                <DefaultButton 
+                                <DefaultButton type="button"
                                     label='Imprimir'
                                     onClick={this.props.onPrint}/>
                             </td>
                             <td >
-                                <DefaultButton 
+                                <DefaultButton type="button"
                                     label='Cerrar'
                                     onClick={this.props.onClose}/>
                             </td>                

@@ -24,12 +24,9 @@ export default class Presupuesto extends React.Component<IPresupuestoProps, any>
     }; 
     pnp.sp.web.get().then(web => SPComponentLoader.loadCss(web.Url + '/CDN/PresupuestosWebpartStyles.css'));
   }   
-  public render(): React.ReactElement<IPresupuestoProps> {
-    
-    
+  public render(): React.ReactElement<IPresupuestoProps> {   
     return (
       <div>   
-        <h2>Presupuesto</h2>     
         <ProductSelector Products={this.state.products} OnAddProduct={this.addProduct}  />
         { 
           (_.filter(this.state.products, { 'selected': true }) as Array<any>).map(product => 
@@ -43,7 +40,7 @@ export default class Presupuesto extends React.Component<IPresupuestoProps, any>
         <h2>
           Total: ${this.total()}
         </h2>
-        <DefaultButton label='Guardar' onClick={this.askCustomerInformation} />
+        <DefaultButton label='Guardar' onClick={this.askCustomerInformation} type="button"/>
         <CustomerInfo onCustomerChange={this.updateCustomer} 
           onCustomerNumberChange={this.updateCustomerNumber} 
           onCustomerEmailChange={this.updateCustomerEmail} 
@@ -93,7 +90,6 @@ export default class Presupuesto extends React.Component<IPresupuestoProps, any>
     this.setState({showDialog: true });
   }
 
-
   private addUniqueFileToPresupuestos = (name: string, file: Blob, repeats: number) => {
     let filename = name + (repeats == 0 ? '' : ` (${repeats})`); 
     this.setState({ saving: true });
@@ -119,7 +115,6 @@ export default class Presupuesto extends React.Component<IPresupuestoProps, any>
 
   private total = () => 
       _.sumBy((_.filter(this.state.products, { 'selected': true }) as Array<any>), (o) => { return o.quantity * o.Precio; });
-  
 
   private incrementProduct = (item) => {
     this.setState((prevState, props) => {
